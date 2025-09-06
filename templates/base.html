@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Team Tracker - Falcon{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="{% static 'css/custom.css' %}" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'falcon-blue': '#1e3a8a',
+                        'falcon-light': '#3b82f6',
+                        'falcon-dark': '#1e40af',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-falcon-blue shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-users text-white text-2xl mr-2"></i>
+                        <span class="text-white text-xl font-bold">Team Tracker</span>
+                    </div>
+                    <div class="hidden md:ml-6 md:flex md:space-x-8">
+                        <a href="{% url 'members:dashboard' %}" class="text-white hover:text-blue-200 px-3 py-2 rounded-md text-sm font-medium transition duration-300">
+                            <i class="fas fa-tachometer-alt mr-1"></i> Dashboard
+                        </a>
+                        <a href="{% url 'members:member_list' %}" class="text-white hover:text-blue-200 px-3 py-2 rounded-md text-sm font-medium transition duration-300">
+                            <i class="fas fa-users mr-1"></i> Members
+                        </a>
+                        <a href="{% url 'members:leaderboard' %}" class="text-white hover:text-blue-200 px-3 py-2 rounded-md text-sm font-medium transition duration-300">
+                            <i class="fas fa-trophy mr-1"></i> Leaderboard
+                        </a>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <a href="/admin/" class="text-white hover:text-blue-200 px-3 py-2 rounded-md text-sm font-medium transition duration-300">
+                        <i class="fas fa-cog mr-1"></i> Admin
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div class="md:hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="{% url 'members:dashboard' %}" class="text-white hover:text-blue-200 block px-3 py-2 rounded-md text-base font-medium">
+                    <i class="fas fa-tachometer-alt mr-1"></i> Dashboard
+                </a>
+                <a href="{% url 'members:member_list' %}" class="text-white hover:text-blue-200 block px-3 py-2 rounded-md text-base font-medium">
+                    <i class="fas fa-users mr-1"></i> Members
+                </a>
+                <a href="{% url 'members:leaderboard' %}" class="text-white hover:text-blue-200 block px-3 py-2 rounded-md text-base font-medium">
+                    <i class="fas fa-trophy mr-1"></i> Leaderboard
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white mt-12">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <p>&copy; 2025 Team Tracker - Falcon. Built with Django & Tailwind CSS.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Add some interactivity
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate cards on scroll
+            const cards = document.querySelectorAll('.card-animate');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-fade-in');
+                    }
+                });
+            });
+            
+            cards.forEach(card => observer.observe(card));
+        });
+    </script>
+</body>
+</html>
