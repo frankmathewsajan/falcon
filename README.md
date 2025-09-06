@@ -233,7 +233,7 @@ This project is open source and available under the [MIT License](LICENSE).
 ## 👨‍💻 Developer
 
 Built with ❤️ using Django and Tailwind CSS for a beautiful, modern team management experience.
-
+Frank Mathew Sajan
 ---
 
 **Team Tracker - Falcon** - Empowering teams with beautiful task management and performance tracking.

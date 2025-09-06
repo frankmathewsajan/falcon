@@ -1,203 +1,172 @@
 {% extends 'base.html' %}
 
-{% block title %}Dashboard - Team Tracker{% endblock %}
+{% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<div class="space-y-8">
-    <!-- Header -->
-    <div class="text-center">
-        <h1 class="text-4xl font-bold text-gray-900 mb-2">
-            <i class="fas fa-tachometer-alt text-falcon-blue mr-3"></i>
-            Team Dashboard
-        </h1>
-        <p class="text-xl text-gray-600">Track your team's progress and performance</p>
-    </div>
-
-    <!-- Stats Overview -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="bg-white overflow-hidden shadow-lg rounded-lg hover:shadow-xl transition-shadow duration-300 card-animate">
-            <div class="p-6">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <i class="fas fa-users text-3xl text-blue-500"></i>
-                    </div>
-                    <div class="ml-5 w-0 flex-1">
-                        <dl>
-                            <dt class="text-sm font-medium text-gray-500 truncate">Total Members</dt>
-                            <dd class="text-3xl font-semibold text-gray-900">{{ total_members }}</dd>
-                        </dl>
-                    </div>
+<div class="space-y-6">
+    <!-- Minimal Stats Overview -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+        <div class="bg-white rounded-xl p-4 border border-gray-100 hover:border-falcon-blue/20 transition-all duration-300 group">
+            <div class="space-y-1">
+                <div class="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center group-hover:bg-blue-100 transition-colors">
+                    <i class="fas fa-users text-falcon-blue text-sm"></i>
                 </div>
+                <div class="text-2xl font-lora font-semibold text-charcoal">{{ total_members }}</div>
+                <div class="text-xs text-gray-500 font-lora">Members</div>
             </div>
         </div>
 
-        <div class="bg-white overflow-hidden shadow-lg rounded-lg hover:shadow-xl transition-shadow duration-300 card-animate">
-            <div class="p-6">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <i class="fas fa-tasks text-3xl text-green-500"></i>
-                    </div>
-                    <div class="ml-5 w-0 flex-1">
-                        <dl>
-                            <dt class="text-sm font-medium text-gray-500 truncate">Total Tasks</dt>
-                            <dd class="text-3xl font-semibold text-gray-900">{{ total_tasks }}</dd>
-                        </dl>
-                    </div>
+        <div class="bg-white rounded-xl p-4 border border-gray-100 hover:border-green-200 transition-all duration-300 group">
+            <div class="space-y-1">
+                <div class="w-8 h-8 bg-green-50 rounded-lg flex items-center justify-center group-hover:bg-green-100 transition-colors">
+                    <i class="fas fa-tasks text-green-600 text-sm"></i>
                 </div>
+                <div class="text-2xl font-lora font-semibold text-charcoal">{{ total_tasks }}</div>
+                <div class="text-xs text-gray-500 font-lora">Tasks</div>
             </div>
         </div>
 
-        <div class="bg-white overflow-hidden shadow-lg rounded-lg hover:shadow-xl transition-shadow duration-300 card-animate">
-            <div class="p-6">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <i class="fas fa-check-circle text-3xl text-purple-500"></i>
-                    </div>
-                    <div class="ml-5 w-0 flex-1">
-                        <dl>
-                            <dt class="text-sm font-medium text-gray-500 truncate">Completed Tasks</dt>
-                            <dd class="text-3xl font-semibold text-gray-900">{{ completed_tasks }}</dd>
-                        </dl>
-                    </div>
+        <div class="bg-white rounded-xl p-4 border border-gray-100 hover:border-purple-200 transition-all duration-300 group">
+            <div class="space-y-1">
+                <div class="w-8 h-8 bg-purple-50 rounded-lg flex items-center justify-center group-hover:bg-purple-100 transition-colors">
+                    <i class="fas fa-check-circle text-purple-600 text-sm"></i>
                 </div>
+                <div class="text-2xl font-lora font-semibold text-charcoal">{{ completed_tasks }}</div>
+                <div class="text-xs text-gray-500 font-lora">Completed</div>
             </div>
         </div>
 
-        <div class="bg-white overflow-hidden shadow-lg rounded-lg hover:shadow-xl transition-shadow duration-300 card-animate">
-            <div class="p-6">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0">
-                        <i class="fas fa-star text-3xl text-yellow-500"></i>
-                    </div>
-                    <div class="ml-5 w-0 flex-1">
-                        <dl>
-                            <dt class="text-sm font-medium text-gray-500 truncate">Total Credits</dt>
-                            <dd class="text-3xl font-semibold text-gray-900">{{ total_credits }}</dd>
-                        </dl>
-                    </div>
+        <div class="bg-white rounded-xl p-4 border border-gray-100 hover:border-yellow-200 transition-all duration-300 group">
+            <div class="space-y-1">
+                <div class="w-8 h-8 bg-yellow-50 rounded-lg flex items-center justify-center group-hover:bg-yellow-100 transition-colors">
+                    <i class="fas fa-star text-yellow-600 text-sm"></i>
                 </div>
+                <div class="text-2xl font-lora font-semibold text-charcoal">{{ total_credits }}</div>
+                <div class="text-xs text-gray-500 font-lora">Credits</div>
             </div>
         </div>
     </div>
 
-    <!-- Progress Bar -->
-    <div class="bg-white overflow-hidden shadow-lg rounded-lg">
-        <div class="p-6">
-            <h3 class="text-lg font-medium text-gray-900 mb-4">
-                <i class="fas fa-chart-line mr-2 text-falcon-blue"></i>
-                Overall Completion Rate
-            </h3>
-            <div class="w-full bg-gray-200 rounded-full h-4">
-                <div class="bg-gradient-to-r from-green-400 to-green-600 h-4 rounded-full transition-all duration-1000 ease-out" 
+    <!-- Progress Section -->
+    {% if total_tasks > 0 %}
+    <div class="bg-white rounded-xl p-5 border border-gray-100">
+        <div class="space-y-4">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-lora font-medium text-charcoal">Progress</h3>
+                <span class="text-xl font-lora font-semibold text-falcon-blue">{{ completion_rate|floatformat:1 }}%</span>
+            </div>
+            <div class="w-full bg-gray-100 rounded-full h-2">
+                <div class="bg-gradient-to-r from-falcon-blue to-falcon-light h-2 rounded-full transition-all duration-1000 ease-out" 
                      style="width: {{ completion_rate|floatformat:1 }}%"></div>
             </div>
-            <p class="text-sm text-gray-600 mt-2">{{ completion_rate|floatformat:1 }}% of all tasks completed</p>
+            <p class="text-xs text-gray-500 font-lora">{{ completed_tasks }} of {{ total_tasks }} tasks completed</p>
         </div>
     </div>
+    {% endif %}
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Top Performers -->
-        <div class="bg-white overflow-hidden shadow-lg rounded-lg">
-            <div class="p-6">
-                <h3 class="text-lg font-medium text-gray-900 mb-4">
-                    <i class="fas fa-trophy mr-2 text-yellow-500"></i>
+        <div class="bg-white rounded-xl p-5 border border-gray-100">
+            <div class="space-y-4">
+                <h3 class="text-lg font-lora font-medium text-charcoal flex items-center">
+                    <div class="w-6 h-6 bg-yellow-50 rounded-lg flex items-center justify-center mr-2">
+                        <i class="fas fa-trophy text-yellow-600 text-xs"></i>
+                    </div>
                     Top Performers
                 </h3>
                 {% if top_performers %}
                     <div class="space-y-3">
                         {% for member in top_performers %}
                             <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0">
-                                        {% if forloop.counter == 1 %}
-                                            <i class="fas fa-medal text-yellow-500 text-xl"></i>
-                                        {% elif forloop.counter == 2 %}
-                                            <i class="fas fa-medal text-gray-400 text-xl"></i>
-                                        {% elif forloop.counter == 3 %}
-                                            <i class="fas fa-medal text-yellow-600 text-xl"></i>
-                                        {% else %}
-                                            <i class="fas fa-user-circle text-gray-400 text-xl"></i>
-                                        {% endif %}
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-8 h-8 bg-falcon-blue rounded-full flex items-center justify-center text-white font-medium text-xs">
+                                        {{ forloop.counter }}
                                     </div>
-                                    <div class="ml-3">
-                                        <p class="text-sm font-medium text-gray-900">{{ member.name }}</p>
+                                    <div>
+                                        <p class="font-lora font-medium text-charcoal text-sm">{{ member.name }}</p>
                                         <p class="text-xs text-gray-500">{{ member.reg_number }}</p>
                                     </div>
                                 </div>
                                 <div class="text-right">
-                                    <p class="text-sm font-semibold text-falcon-blue">{{ member.total_credits|default:0 }} credits</p>
+                                    <p class="font-lora font-semibold text-falcon-blue text-sm">{{ member.total_credits|default:0 }}</p>
+                                    <p class="text-xs text-gray-500">credits</p>
                                 </div>
                             </div>
                         {% endfor %}
                     </div>
                 {% else %}
-                    <p class="text-gray-500 text-center py-4">No data available yet</p>
+                    <div class="text-center py-6">
+                        <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-trophy text-gray-400 text-lg"></i>
+                        </div>
+                        <p class="text-gray-500 font-lora text-sm">No performance data yet</p>
+                    </div>
                 {% endif %}
             </div>
         </div>
 
         <!-- Recent Activity -->
-        <div class="bg-white overflow-hidden shadow-lg rounded-lg">
-            <div class="p-6">
-                <h3 class="text-lg font-medium text-gray-900 mb-4">
-                    <i class="fas fa-clock mr-2 text-blue-500"></i>
+        <div class="bg-white rounded-xl p-5 border border-gray-100">
+            <div class="space-y-4">
+                <h3 class="text-lg font-lora font-medium text-charcoal flex items-center">
+                    <div class="w-6 h-6 bg-blue-50 rounded-lg flex items-center justify-center mr-2">
+                        <i class="fas fa-clock text-blue-600 text-xs"></i>
+                    </div>
                     Recent Activity
                 </h3>
                 {% if recent_tasks %}
                     <div class="space-y-3">
-                        {% for task in recent_tasks %}
+                        {% for task in recent_tasks|slice:":5" %}
                             <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                                <div class="flex items-center">
-                                    <div class="flex-shrink-0">
-                                        {% if task.is_completed %}
-                                            <i class="fas fa-check-circle text-green-500"></i>
-                                        {% else %}
-                                            <i class="fas fa-clock text-orange-500"></i>
-                                        {% endif %}
-                                    </div>
-                                    <div class="ml-3">
-                                        <p class="text-sm font-medium text-gray-900">{{ task.title|truncatechars:30 }}</p>
+                                <div class="flex items-center space-x-2">
+                                    <div class="w-2 h-2 rounded-full {% if task.is_completed %}bg-green-500{% else %}bg-orange-400{% endif %}"></div>
+                                    <div class="min-w-0 flex-1">
+                                        <p class="font-lora font-medium text-charcoal truncate text-sm">{{ task.title|truncatechars:25 }}</p>
                                         <p class="text-xs text-gray-500">{{ task.member.name }} • {{ task.created_at|timesince }} ago</p>
                                     </div>
                                 </div>
-                                <div class="text-right">
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                                        {% if task.is_completed %}bg-green-100 text-green-800{% else %}bg-orange-100 text-orange-800{% endif %}">
-                                        {{ task.credits }} credits
-                                    </span>
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-sm font-medium text-gray-600">{{ task.credits }}</span>
+                                    {% if task.is_completed %}
+                                        <i class="fas fa-check-circle text-green-500 text-xs"></i>
+                                    {% else %}
+                                        <i class="fas fa-clock text-orange-400 text-xs"></i>
+                                    {% endif %}
                                 </div>
                             </div>
                         {% endfor %}
                     </div>
                 {% else %}
-                    <p class="text-gray-500 text-center py-4">No recent activity</p>
+                    <div class="text-center py-6">
+                        <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                            <i class="fas fa-clock text-gray-400 text-lg"></i>
+                        </div>
+                        <p class="text-gray-500 font-lora text-sm">No recent activity</p>
+                    </div>
                 {% endif %}
             </div>
         </div>
     </div>
 
     <!-- Quick Actions -->
-    <div class="bg-white overflow-hidden shadow-lg rounded-lg">
-        <div class="p-6">
-            <h3 class="text-lg font-medium text-gray-900 mb-4">
-                <i class="fas fa-bolt mr-2 text-yellow-500"></i>
-                Quick Actions
-            </h3>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div class="bg-white rounded-xl p-5 border border-gray-100">
+        <div class="space-y-4">
+            <h3 class="text-lg font-lora font-medium text-charcoal">Quick Actions</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <a href="{% url 'members:member_list' %}" 
-                   class="bg-falcon-blue text-white px-6 py-3 rounded-lg hover:bg-falcon-dark transition-colors duration-200 text-center">
-                    <i class="fas fa-users mr-2"></i>
-                    View All Members
+                   class="flex items-center justify-center space-x-2 bg-falcon-blue text-white px-4 py-3 rounded-lg hover:bg-falcon-dark transition-colors duration-200 font-lora font-medium text-sm">
+                    <i class="fas fa-users text-xs"></i>
+                    <span>View Members</span>
                 </a>
                 <a href="{% url 'members:leaderboard' %}" 
-                   class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors duration-200 text-center">
-                    <i class="fas fa-trophy mr-2"></i>
-                    View Leaderboard
+                   class="flex items-center justify-center space-x-2 bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 transition-colors duration-200 font-lora font-medium text-sm">
+                    <i class="fas fa-trophy text-xs"></i>
+                    <span>Leaderboard</span>
                 </a>
                 <a href="/admin/" 
-                   class="bg-purple-600 text-white px-6 py-3 rounded-lg hover:bg-purple-700 transition-colors duration-200 text-center">
-                    <i class="fas fa-plus mr-2"></i>
-                    Add New Member
+                   class="flex items-center justify-center space-x-2 bg-gray-600 text-white px-4 py-3 rounded-lg hover:bg-gray-700 transition-colors duration-200 font-lora font-medium text-sm">
+                    <i class="fas fa-plus text-xs"></i>
+                    <span>Add Data</span>
                 </a>
             </div>
         </div>

@@ -1,86 +1,75 @@
 {% extends 'base.html' %}
 
-{% block title %}Leaderboard - Team Tracker{% endblock %}
+{% block title %}Leaderboard{% endblock %}
 
 {% block content %}
-<div class="space-y-8">
-    <!-- Header -->
-    <div class="text-center">
-        <h1 class="text-4xl font-bold text-gray-900 mb-2">
-            <i class="fas fa-trophy text-yellow-500 mr-3"></i>
-            Team Leaderboard
-        </h1>
-        <p class="text-xl text-gray-600">Celebrating our top performers</p>
-    </div>
-
+<div class="space-y-6">
     {% if members %}
         <!-- Top 3 Podium -->
         {% if members|length >= 3 %}
-            <div class="bg-white shadow-lg rounded-lg p-8">
-                <h3 class="text-2xl font-bold text-center text-gray-900 mb-8">
-                    <i class="fas fa-medal mr-2 text-yellow-500"></i>
+            <div class="bg-white shadow-lg rounded-xl p-6">
+                <h3 class="text-lg font-lora font-bold text-center text-gray-900 mb-6">
                     Top Performers
                 </h3>
-                <div class="flex justify-center items-end space-x-8">
+                <div class="flex justify-center items-end space-x-6">
                     <!-- Second Place -->
-                    {% with members.1 as member %}
+                    {% if second_place %}
                         <div class="text-center">
-                            <div class="w-20 h-16 bg-gray-400 rounded-t-lg flex items-center justify-center mb-4">
-                                <span class="text-white font-bold text-lg">2</span>
+                            <div class="w-16 h-12 bg-gray-400 rounded-t-lg flex items-center justify-center mb-3">
+                                <span class="text-white font-bold text-sm">2</span>
                             </div>
-                            <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4 mx-auto">
-                                <i class="fas fa-user text-3xl text-gray-600"></i>
+                            <div class="w-16 h-16 bg-yellow-50 rounded-full flex items-center justify-center mb-3 mx-auto">
+                                <i class="fas fa-user text-xl text-yellow-700"></i>
                             </div>
-                            <h4 class="font-bold text-gray-900">{{ member.name }}</h4>
-                            <p class="text-sm text-gray-600">{{ member.reg_number }}</p>
-                            <p class="text-lg font-semibold text-gray-700 mt-2">{{ member.total_credits|default:0 }} credits</p>
+                            <h4 class="font-lora font-bold text-gray-900 text-sm">{{ second_place.name }}</h4>
+                            <p class="text-xs text-gray-600">{{ second_place.reg_number }}</p>
+                            <p class="text-sm font-semibold text-gray-700 mt-1">{{ second_place.total_credits|default:0 }} credits</p>
                         </div>
-                    {% endwith %}
+                    {% endif %}
 
                     <!-- First Place -->
-                    {% with members.0 as member %}
+                    {% if first_place %}
                         <div class="text-center">
-                            <div class="w-20 h-20 bg-yellow-500 rounded-t-lg flex items-center justify-center mb-4">
-                                <i class="fas fa-crown text-white text-2xl"></i>
+                            <div class="w-16 h-16 bg-yellow-500 rounded-t-lg flex items-center justify-center mb-3">
+                                <i class="fas fa-crown text-white text-lg"></i>
                             </div>
-                            <div class="w-28 h-28 bg-yellow-100 rounded-full flex items-center justify-center mb-4 mx-auto border-4 border-yellow-500">
-                                <i class="fas fa-user text-4xl text-yellow-600"></i>
+                            <div class="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mb-3 mx-auto border-4 border-yellow-500">
+                                <i class="fas fa-user text-2xl text-yellow-600"></i>
                             </div>
-                            <h4 class="font-bold text-gray-900 text-lg">{{ member.name }}</h4>
-                            <p class="text-sm text-gray-600">{{ member.reg_number }}</p>
-                            <p class="text-xl font-bold text-yellow-600 mt-2">{{ member.total_credits|default:0 }} credits</p>
+                            <h4 class="font-lora font-bold text-gray-900 text-base">{{ first_place.name }}</h4>
+                            <p class="text-xs text-gray-600">{{ first_place.reg_number }}</p>
+                            <p class="text-lg font-lora font-bold text-yellow-600 mt-1">{{ first_place.total_credits|default:0 }} credits</p>
                             <div class="mt-2">
-                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
                                     <i class="fas fa-star mr-1"></i>
                                     Champion
                                 </span>
                             </div>
                         </div>
-                    {% endwith %}
+                    {% endif %}
 
                     <!-- Third Place -->
-                    {% with members.2 as member %}
+                    {% if third_place %}
                         <div class="text-center">
-                            <div class="w-20 h-12 bg-yellow-600 rounded-t-lg flex items-center justify-center mb-4">
-                                <span class="text-white font-bold text-lg">3</span>
+                            <div class="w-16 h-12 bg-yellow-600 rounded-t-lg flex items-center justify-center mb-3">
+                                <span class="text-white font-bold text-sm">3</span>
                             </div>
-                            <div class="w-20 h-20 bg-yellow-50 rounded-full flex items-center justify-center mb-4 mx-auto">
-                                <i class="fas fa-user text-2xl text-yellow-700"></i>
+                            <div class="w-16 h-16 bg-yellow-50 rounded-full flex items-center justify-center mb-3 mx-auto">
+                                <i class="fas fa-user text-xl text-yellow-700"></i>
                             </div>
-                            <h4 class="font-bold text-gray-900">{{ member.name }}</h4>
-                            <p class="text-sm text-gray-600">{{ member.reg_number }}</p>
-                            <p class="text-lg font-semibold text-yellow-700 mt-2">{{ member.total_credits|default:0 }} credits</p>
+                            <h4 class="font-lora font-bold text-gray-900 text-sm">{{ third_place.name }}</h4>
+                            <p class="text-xs text-gray-600">{{ third_place.reg_number }}</p>
+                            <p class="text-sm font-lora font-semibold text-yellow-700 mt-1">{{ third_place.total_credits|default:0 }} credits</p>
                         </div>
-                    {% endwith %}
+                    {% endif %}
                 </div>
             </div>
         {% endif %}
 
         <!-- Full Leaderboard Table -->
-        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-            <div class="p-6 border-b border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900">
-                    <i class="fas fa-list-ol mr-2 text-falcon-blue"></i>
+        <div class="bg-white shadow-lg rounded-xl overflow-hidden">
+            <div class="p-4 border-b border-gray-200">
+                <h3 class="text-lg font-lora font-semibold text-gray-900">
                     Complete Rankings
                 </h3>
             </div>
@@ -88,37 +77,37 @@
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rank</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Member</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Credits</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tasks Completed</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Tasks</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Success Rate</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            <th class="px-4 py-3 text-left text-xs font-lora font-medium text-gray-500 uppercase tracking-wider">Rank</th>
+                            <th class="px-4 py-3 text-left text-xs font-lora font-medium text-gray-500 uppercase tracking-wider">Member</th>
+                            <th class="px-4 py-3 text-left text-xs font-lora font-medium text-gray-500 uppercase tracking-wider">Total Credits</th>
+                            <th class="px-4 py-3 text-left text-xs font-lora font-medium text-gray-500 uppercase tracking-wider">Tasks Completed</th>
+                            <th class="px-4 py-3 text-left text-xs font-lora font-medium text-gray-500 uppercase tracking-wider">Total Tasks</th>
+                            <th class="px-4 py-3 text-left text-xs font-lora font-medium text-gray-500 uppercase tracking-wider">Success Rate</th>
+                            <th class="px-4 py-3 text-left text-xs font-lora font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         {% for member in members %}
                             <tr class="hover:bg-gray-50 transition-colors duration-200">
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-4 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
                                         {% if forloop.counter <= 3 %}
                                             {% if forloop.counter == 1 %}
-                                                <i class="fas fa-medal text-yellow-500 text-xl mr-2"></i>
+                                                <i class="fas fa-medal text-yellow-500 text-lg mr-2"></i>
                                             {% elif forloop.counter == 2 %}
-                                                <i class="fas fa-medal text-gray-400 text-xl mr-2"></i>
+                                                <i class="fas fa-medal text-gray-400 text-lg mr-2"></i>
                                             {% else %}
-                                                <i class="fas fa-medal text-yellow-600 text-xl mr-2"></i>
+                                                <i class="fas fa-medal text-yellow-600 text-lg mr-2"></i>
                                             {% endif %}
                                         {% else %}
-                                            <span class="text-gray-500 font-medium mr-4">{{ forloop.counter }}</span>
+                                            <span class="text-gray-500 font-lora font-medium mr-4">{{ forloop.counter }}</span>
                                         {% endif %}
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 whitespace-nowrap">
+                                <td class="px-4 py-4 whitespace-nowrap">
                                     <div class="flex items-center">
-                                        <div class="w-10 h-10 bg-falcon-blue rounded-full flex items-center justify-center">
-                                            <i class="fas fa-user text-white"></i>
+                                        <div class="w-8 h-8 bg-falcon-blue rounded-full flex items-center justify-center">
+                                            <i class="fas fa-user text-white text-sm"></i>
                                         </div>
                                         <div class="ml-4">
                                             <div class="text-sm font-medium text-gray-900">{{ member.name }}</div>
@@ -173,16 +162,18 @@
             </div>
             <div class="bg-white shadow-lg rounded-lg p-6 text-center">
                 <div class="text-3xl font-bold text-green-600 mb-2">
-                    {% if members %}{{ members.0.total_credits|default:0 }}{% else %}0{% endif %}
+                    {% if first_place %}{{ first_place.total_credits|default:0 }}{% else %}0{% endif %}
                 </div>
                 <div class="text-gray-600">Highest Score</div>
             </div>
             <div class="bg-white shadow-lg rounded-lg p-6 text-center">
                 <div class="text-3xl font-bold text-purple-600 mb-2">
-                    {% if members %}
-                        {% for member in members %}
-                            {% if forloop.counter == 1 %}{{ member.total_credits|add:member.1.total_credits|add:member.2.total_credits|default:0 }}{% endif %}
-                        {% endfor %}
+                    {% if first_place and second_place and third_place %}
+                        {{ first_place.total_credits|default:0|add:second_place.total_credits|default:0|add:third_place.total_credits|default:0 }}
+                    {% elif first_place and second_place %}
+                        {{ first_place.total_credits|default:0|add:second_place.total_credits|default:0 }}
+                    {% elif first_place %}
+                        {{ first_place.total_credits|default:0 }}
                     {% else %}0{% endif %}
                 </div>
                 <div class="text-gray-600">Top 3 Combined</div>

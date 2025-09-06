@@ -44,8 +44,17 @@ def leaderboard(request):
         completed_tasks=Count('tasks', filter=Q(tasks__is_completed=True))
     ).order_by('-total_credits')
     
+    # Get top 3 performers
+    top_members = list(members[:3])
+    first_place = top_members[0] if len(top_members) > 0 else None
+    second_place = top_members[1] if len(top_members) > 1 else None
+    third_place = top_members[2] if len(top_members) > 2 else None
+    
     context = {
         'members': members,
+        'first_place': first_place,
+        'second_place': second_place,
+        'third_place': third_place,
         'page_title': 'Leaderboard'
     }
     return render(request, "members/leaderboard.html", context)

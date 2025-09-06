@@ -1,29 +1,29 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ member.name }} - Team Tracker{% endblock %}
+{% block title %}{{ member.name }}{% endblock %}
 
 {% block content %}
-<div class="space-y-8">
+<div class="space-y-6">
     <!-- Back Button -->
     <div>
         <a href="{% url 'members:member_list' %}" 
-           class="inline-flex items-center text-falcon-blue hover:text-falcon-dark transition-colors duration-200">
+           class="inline-flex items-center text-falcon-blue hover:text-falcon-dark transition-colors duration-200 font-lora">
             <i class="fas fa-arrow-left mr-2"></i>
             Back to Members
         </a>
     </div>
 
     <!-- Member Header -->
-    <div class="bg-white shadow-lg rounded-lg overflow-hidden">
-        <div class="bg-gradient-to-r from-falcon-blue to-falcon-light p-6 text-white">
+    <div class="bg-white shadow-lg rounded-xl overflow-hidden">
+        <div class="bg-gradient-to-r from-falcon-blue to-falcon-light p-5 text-white">
             <div class="flex items-center">
-                <div class="w-20 h-20 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                    <i class="fas fa-user text-3xl"></i>
+                <div class="w-16 h-16 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                    <i class="fas fa-user text-2xl"></i>
                 </div>
-                <div class="ml-6">
-                    <h1 class="text-3xl font-bold">{{ member.name }}</h1>
-                    <p class="text-blue-100 text-lg">{{ member.reg_number }}</p>
-                    <p class="text-blue-100">
+                <div class="ml-4">
+                    <h1 class="text-2xl font-lora font-bold">{{ member.name }}</h1>
+                    <p class="text-blue-100 text-base font-lora">{{ member.reg_number }}</p>
+                    <p class="text-blue-100 text-sm font-lora">
                         <i class="fas fa-envelope mr-2"></i>
                         {{ member.email }}
                     </p>
