@@ -1,0 +1,17 @@
+# Falcon Team Tracker - Executable Requirements
+# Use this file to create a standalone executable
+
+# Core dependencies for the installer
+# No external dependencies needed - uses only Python standard library
+
+# For creating executable with PyInstaller:
+# pip install pyinstaller
+# pyinstaller --onefile --windowed --name "FalconInstaller" --icon=falcon.ico falcon.py
+
+# For creating executable with cx_Freeze:
+# pip install cx_freeze
+# python setup.py build
+
+# For creating executable with auto-py-to-exe (GUI for PyInstaller):
+# pip install auto-py-to-exe
+# auto-py-to-exe
