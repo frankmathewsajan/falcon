@@ -276,20 +276,68 @@ if /i "%confirm%" NEQ "Y" (
 echo.
 echo Stopping Falcon Team Tracker processes...
 
-REM Kill any Python processes running Django server
+REM Kill any Python processes running Django server (multiple attempts)
 taskkill /f /im python.exe /fi "WINDOWTITLE eq Falcon Team Tracker*" 2>nul
 taskkill /f /im python.exe /fi "COMMANDLINE eq *manage.py runserver*" 2>nul
+taskkill /f /im python.exe /fi "COMMANDLINE eq *{install_dir}*" 2>nul
 
-REM Wait a moment for processes to close
+REM More aggressive killing - any python.exe in the installation directory
+for /f "tokens=2" %%i in ('tasklist /fo csv ^| findstr /i "python.exe"') do (
+    taskkill /f /pid %%i 2>nul
+)
+
+REM Kill any command prompts that might be running the server
+taskkill /f /im cmd.exe /fi "WINDOWTITLE eq Falcon Team Tracker*" 2>nul
+
+echo Waiting for processes to close...
+timeout /t 5 /nobreak >nul
+
+REM Try to unlock files by ending Windows Explorer if needed
+echo Attempting to unlock files...
+taskkill /f /im explorer.exe 2>nul
 timeout /t 2 /nobreak >nul
+start explorer.exe
 
 echo Removing installation directory...
 if exist "{install_dir}" (
-    rmdir /s /q "{install_dir}"
+    REM Try multiple times with increasing delays
+    for /L %%i in (1,1,3) do (
+        echo Attempt %%i of 3...
+        rmdir /s /q "{install_dir}" 2>nul
+        if not exist "{install_dir}" (
+            echo Installation directory removed successfully.
+            goto :cleanup
+        )
+        echo Failed, waiting and retrying...
+        timeout /t 3 /nobreak >nul
+    )
+    
+    REM If still failing, try to delete contents first
+    echo Trying alternative deletion method...
+    cd /d "{parent_dir}"
+    attrib -r -s -h "{install_dir}\\*.*" /s /d 2>nul
+    del /f /s /q "{install_dir}\\*.*" 2>nul
+    for /d %%x in ("{install_dir}\\*") do rmdir /s /q "%%x" 2>nul
+    rmdir /q "{install_dir}" 2>nul
+    
     if exist "{install_dir}" (
-        echo Warning: Some files could not be deleted. Please close any open programs and try again.
-        pause
-        exit /b 1
+        echo.
+        echo ============================================
+        echo   PARTIAL UNINSTALL
+        echo ============================================
+        echo.
+        echo Some files could not be deleted automatically.
+        echo This usually happens when:
+        echo   - The application is still running
+        echo   - Files are open in another program
+        echo   - Antivirus is scanning the files
+        echo.
+        echo Please:
+        echo   1. Restart your computer
+        echo   2. Manually delete: {install_dir}
+        echo   3. Run this uninstaller again
+        echo.
+        goto :end
     ) else (
         echo Installation directory removed successfully.
     )
@@ -297,9 +345,10 @@ if exist "{install_dir}" (
     echo Installation directory not found.
 )
 
+:cleanup
 echo Removing shortcuts...
-if exist "%~dp0Run_Falcon.bat" del "%~dp0Run_Falcon.bat"
-if exist "%USERPROFILE%\\Desktop\\Falcon Team Tracker.lnk" del "%USERPROFILE%\\Desktop\\Falcon Team Tracker.lnk"
+if exist "%~dp0Run_Falcon.bat" del "%~dp0Run_Falcon.bat" 2>nul
+if exist "%USERPROFILE%\\Desktop\\Falcon Team Tracker.lnk" del "%USERPROFILE%\\Desktop\\Falcon Team Tracker.lnk" 2>nul
 
 echo.
 echo ============================================
@@ -309,8 +358,11 @@ echo.
 echo Falcon Team Tracker has been completely removed from your system.
 echo.
 
-REM Self-delete this uninstall script
+:end
 echo Cleaning up uninstaller...
+timeout /t 2 /nobreak >nul
+
+REM Self-delete this uninstall script
 (goto) 2>nul & del "%~f0"'''
 
                 uninstall_path = os.path.join(parent_dir, "Uninstall_Falcon.bat")
