@@ -238,8 +238,12 @@ class FalconInstaller:
     def create_shortcuts(self, install_dir):
         """Create shortcuts to run the application"""
         try:
+            # Create shortcut in parent directory of installation
+            parent_dir = os.path.dirname(install_dir)
+            folder_name = os.path.basename(install_dir)
+            
             if os.name == 'nt':  # Windows
-                # Create batch file
+                # Create batch file in parent directory
                 batch_content = f'''@echo off
 title Falcon Team Tracker
 echo Starting Falcon Team Tracker...
@@ -248,9 +252,70 @@ call venv\\Scripts\\activate
 python manage.py runserver 127.0.0.1:8000
 pause'''
                 
-                batch_path = os.path.join(install_dir, "Run_Falcon.bat")
+                batch_path = os.path.join(parent_dir, "Run_Falcon.bat")
                 with open(batch_path, 'w') as f:
                     f.write(batch_content)
+                
+                # Create uninstall batch file
+                uninstall_content = f'''@echo off
+title Falcon Team Tracker - Uninstaller
+echo.
+echo ============================================
+echo   Falcon Team Tracker - Uninstaller
+echo ============================================
+echo.
+echo This will completely remove Falcon Team Tracker and all its files.
+echo.
+set /p confirm="Are you sure you want to uninstall? (Y/N): "
+if /i "%confirm%" NEQ "Y" (
+    echo Uninstall cancelled.
+    pause
+    exit /b
+)
+
+echo.
+echo Stopping Falcon Team Tracker processes...
+
+REM Kill any Python processes running Django server
+taskkill /f /im python.exe /fi "WINDOWTITLE eq Falcon Team Tracker*" 2>nul
+taskkill /f /im python.exe /fi "COMMANDLINE eq *manage.py runserver*" 2>nul
+
+REM Wait a moment for processes to close
+timeout /t 2 /nobreak >nul
+
+echo Removing installation directory...
+if exist "{install_dir}" (
+    rmdir /s /q "{install_dir}"
+    if exist "{install_dir}" (
+        echo Warning: Some files could not be deleted. Please close any open programs and try again.
+        pause
+        exit /b 1
+    ) else (
+        echo Installation directory removed successfully.
+    )
+) else (
+    echo Installation directory not found.
+)
+
+echo Removing shortcuts...
+if exist "%~dp0Run_Falcon.bat" del "%~dp0Run_Falcon.bat"
+if exist "%USERPROFILE%\\Desktop\\Falcon Team Tracker.lnk" del "%USERPROFILE%\\Desktop\\Falcon Team Tracker.lnk"
+
+echo.
+echo ============================================
+echo   Uninstall completed successfully!
+echo ============================================
+echo.
+echo Falcon Team Tracker has been completely removed from your system.
+echo.
+
+REM Self-delete this uninstall script
+echo Cleaning up uninstaller...
+(goto) 2>nul & del "%~f0"'''
+
+                uninstall_path = os.path.join(parent_dir, "Uninstall_Falcon.bat")
+                with open(uninstall_path, 'w') as f:
+                    f.write(uninstall_content)
                 
                 # Try to create desktop shortcut
                 try:
@@ -265,25 +330,81 @@ pause'''
                     shortcut.IconLocation = batch_path
                     shortcut.save()
                     
-                    return True, "Desktop shortcut created"
+                    return True, f"Desktop shortcut, run script, and uninstaller created at {parent_dir}"
                 except:
-                    return True, "Batch file created (desktop shortcut requires pywin32)"
+                    return True, f"Run script and uninstaller created at {parent_dir} (desktop shortcut requires pywin32)"
                     
             else:  # Unix/Linux/Mac
-                # Create shell script
+                # Create shell script in parent directory
                 script_content = f'''#!/bin/bash
 echo "Starting Falcon Team Tracker..."
 cd "{install_dir}"
 source venv/bin/activate
 python manage.py runserver 127.0.0.1:8000'''
                 
-                script_path = os.path.join(install_dir, "run_falcon.sh")
+                script_path = os.path.join(parent_dir, "run_falcon.sh")
                 with open(script_path, 'w') as f:
                     f.write(script_content)
                 
-                # Make executable
+                # Create uninstall script
+                uninstall_content = f'''#!/bin/bash
+echo "============================================"
+echo "  Falcon Team Tracker - Uninstaller"
+echo "============================================"
+echo
+echo "This will completely remove Falcon Team Tracker and all its files."
+echo
+read -p "Are you sure you want to uninstall? (y/N): " confirm
+if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
+    echo "Uninstall cancelled."
+    exit 0
+fi
+
+echo
+echo "Stopping Falcon Team Tracker processes..."
+
+# Kill any Python processes running Django server
+pkill -f "manage.py runserver" 2>/dev/null
+pkill -f "python.*runserver" 2>/dev/null
+
+# Wait a moment for processes to close
+sleep 2
+
+echo "Removing installation directory..."
+if [ -d "{install_dir}" ]; then
+    rm -rf "{install_dir}"
+    if [ -d "{install_dir}" ]; then
+        echo "Warning: Some files could not be deleted. Please check permissions and try again."
+        exit 1
+    else
+        echo "Installation directory removed successfully."
+    fi
+else
+    echo "Installation directory not found."
+fi
+
+echo "Removing shortcuts..."
+rm -f "$(dirname "$0")/run_falcon.sh"
+
+echo
+echo "============================================"
+echo "  Uninstall completed successfully!"
+echo "============================================"
+echo
+echo "Falcon Team Tracker has been completely removed from your system."
+echo
+
+# Self-delete this uninstall script
+rm -f "$0"'''
+
+                uninstall_path = os.path.join(parent_dir, "uninstall_falcon.sh")
+                with open(uninstall_path, 'w') as f:
+                    f.write(uninstall_content)
+                
+                # Make both scripts executable
                 os.chmod(script_path, 0o755)
-                return True, "Shell script created"
+                os.chmod(uninstall_path, 0o755)
+                return True, f"Run script and uninstaller created at {parent_dir}"
                 
         except Exception as e:
             return False, f"Could not create shortcuts: {e}"
@@ -405,6 +526,7 @@ python manage.py runserver 127.0.0.1:8000'''
                 
                 # Create shortcuts
                 shortcut_success, shortcut_msg = self.create_shortcuts(install_dir)
+                parent_dir = os.path.dirname(install_dir)
                 
                 # Show success message
                 shortcut_info = ""
@@ -413,21 +535,33 @@ python manage.py runserver 127.0.0.1:8000'''
                         shortcut_info = f"""
 EASY ACCESS:
 - Desktop shortcut created (if available)
-- Or double-click: {install_dir}\\Run_Falcon.bat"""
+- Or double-click: {parent_dir}\\Run_Falcon.bat
+
+UNINSTALL:
+- To completely remove: {parent_dir}\\Uninstall_Falcon.bat"""
                     else:  # Unix/Linux/Mac
                         shortcut_info = f"""
 EASY ACCESS:
-- Run the script: {install_dir}/run_falcon.sh"""
+- Run the script: {parent_dir}/run_falcon.sh
+
+UNINSTALL:
+- To completely remove: {parent_dir}/uninstall_falcon.sh"""
                 else:
                     if os.name == 'nt':  # Windows
                         shortcut_info = f"""
 TO RUN AGAIN LATER:
-- Double-click: {install_dir}\\Run_Falcon.bat"""
+- Double-click: {parent_dir}\\Run_Falcon.bat
+
+UNINSTALL:
+- To completely remove: {parent_dir}\\Uninstall_Falcon.bat"""
                     else:  # Unix/Linux/Mac
                         shortcut_info = f"""
 TO RUN AGAIN LATER:
-- Navigate to: {install_dir}
-- Run: ./run_falcon.sh"""
+- Navigate to: {parent_dir}
+- Run: ./run_falcon.sh
+
+UNINSTALL:
+- Run: ./uninstall_falcon.sh"""
                 
                 success_msg = f"""
 Falcon Team Tracker installed successfully!
